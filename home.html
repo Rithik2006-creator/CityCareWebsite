@@ -73,7 +73,7 @@
         </div>
     </section>
 
-    <section class="stats">
+    <section class="stats" id="countStat">
         <div class="stat-card">
             <h3 id="fixed-count">0</h3>
             <p>Issues Fixed</p>
@@ -82,6 +82,11 @@
             <h3 id="active-count">0</h3>
             <p>Active Reports</p>
         </div>
+          <div class="stat-card">
+                    <h3 id="active-count">0</h3>
+                    <p>Issues Pending</p>
+                </div>
+
         <div class="stat-card">
             <h3 id="response-time">0</h3>
             <p> Total complaints filed</p>
@@ -274,6 +279,8 @@
         </div>
     </div>
     <script>
+        closeAll()
+
         // 1. Configuration & Global State
         const CONFIG = {
             API_URL: "https://nonendurable-russel-cachectical.ngrok-free.dev/complaint",
@@ -353,6 +360,7 @@
                 alert("Please click on the map to select a location.");
             }
         };
+    
 
         // Image Preview Handler
         document.getElementById('file-upload').onchange = function (e) {
@@ -467,7 +475,7 @@ window.addEventListener('click', () => {
     profileDropdown.classList.remove('active');
 });
 
-
+getCount()
 function logout() {
     if (confirm("Are you sure you want to logout?")) {
         localStorage.clear(); 
@@ -475,6 +483,52 @@ function logout() {
         window.location.href = "https://nonendurable-russel-cachectical.ngrok-free.dev/index.html"; 
     }
 }
+ function getCount(){
+    const stat_div = document.getElementById("countStat");
+
+    fetch("https://nonendurable-russel-cachectical.ngrok-free.dev/complaint/getCount",{
+    headers:{
+      "ngrok-skip-browser-warning": true
+    }
+}
+    )
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Failed to fetch count data");
+            }
+            return response.json();
+        })
+        .then(stats => {
+          
+          
+            stat_div.innerHTML = `
+                <div class="stat-card">
+                    <h3 id="fixed-count">${stats.issueFixed}</h3>
+                    <p>Issues Fixed</p>
+                </div>
+
+                <div class="stat-card">
+                    <h3 id="active-count">${stats.issueInprogress}</h3>
+                    <p>Active Reports</p>
+                </div>
+
+                <div class="stat-card">
+                    <h3 id="active-count">${stats.issuePending}</h3>
+                    <p>Issues Pending</p>
+                </div>
+
+                <div class="stat-card">
+                    <h3 id="response-time">${stats.totalComplaints}</h3>
+                    <p>Total complaints filed</p>
+                </div>
+            `;
+        })
+        .catch(err => {
+            console.error(err);
+            stat_div.innerHTML = `<p style="color:red">Failed to load statistics</p>`;
+        });
+}
+
     </script>
 </body>
 
