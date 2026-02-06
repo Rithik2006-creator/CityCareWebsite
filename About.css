@@ -1,0 +1,154 @@
+.about-hero {
+    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1444676632488-26a136c45b9b?auto=format&fit=crop&w=1500&q=80');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    text-align: center;
+    padding: 100px 20px;
+}
+
+.about-hero h1 { font-size: 3rem; color: #2ecc71; }
+
+.about-container {
+    padding: 4rem 10%;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.mission {
+    display: flex;
+    align-items: center;
+    gap: 4rem;
+    margin-bottom: 5rem;
+}
+
+.about-text h2 {
+    font-size: 2.5rem;
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+}
+
+.about-img img {
+    width: 100%;
+    border-radius: 15px;
+    box-shadow: 20px 20px 0px #2ecc71;
+}
+
+
+.values {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-bottom: 5rem;
+}
+
+.value-card {
+    background: white;
+  
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    transition: 0.3s;
+}
+
+.value-card:hover { 
+    transform: translateY(-10px);
+border: 2px solid rgb(45, 234, 146);
+ }
+
+.value-card i {
+    font-size: 2.5rem;
+    color: #2ecc71;
+    margin-bottom: 1rem;
+}
+
+
+.contact-cta {
+    text-align: center;
+    background: #2c3e50;
+    color: white;
+    padding: 4rem;
+    border-radius: 15px;
+}
+
+.contact-cta h2 { margin-bottom: 1rem; }
+.contact-cta p { margin-bottom: 2rem; opacity: 0.8; }
+.report-btn{
+    background: #2ecc71;
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+.btn-secondary{
+   padding: 18px 40px; 
+   font-size: 1.2rem; 
+   margin-top: 20px; 
+   cursor: pointer; 
+   border: none; 
+   border-radius: 30px; 
+   background: #27ae60; 
+   color: #ffffff; 
+   font-weight: bold;
+}
+.btn-secondary:hover{
+    background: rgb(0, 0, 0); 
+    color: #27ae60;
+}
+@media (max-width: 768px) {
+    .mission { flex-direction: column; text-align: center; }
+    .about-img img { box-shadow: none; }
+}
+/* Ensure the hero text scales on small screens */
+@media (max-width: 768px) {
+    .about-hero h1 {
+        font-size: 2.2rem;
+    }
+    
+    .about-container {
+        padding: 2rem 5%; /* Give more room to content on mobile */
+    }
+
+    /* Stack the mission text and image */
+    .mission {
+        flex-direction: column-reverse; /* Image looks better below text on mobile */
+        gap: 2rem;
+    }
+
+    /* Adjust the green box-shadow for mobile */
+    .about-img img {
+        box-shadow: 10px 10px 0px #2ecc71; 
+    }
+}
+
+/* Base Navbar Fixes (If not already in style.css) */
+
+
+/* Mobile Menu Logic */
+#check { display: none; }
+
+@media (max-width: 768px) {
+    .checkbtn { display: block; cursor: pointer; font-size: 1.5rem; }
+    
+    .nav-links {
+        position: fixed;
+        width: 100%;
+        height: 100vh;
+        background: #2c3e50;
+        top: 80px;
+        left: -100%;
+        text-align: center;
+        transition: all .5s;
+        flex-direction: column;
+    }
+
+    .nav-links li { margin: 20px 0; }
+    .nav-links li a { color: white; font-size: 20px; }
+
+    #check:checked ~ .nav-links {
+        left: 0;
+    }
+}

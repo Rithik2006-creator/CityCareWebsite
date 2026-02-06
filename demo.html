@@ -1,0 +1,193 @@
+<!--  <!DOCTYPE html>
+<html>
+<head>
+  <title>Base64 to Image</title>
+</head>
+<body>
+  <div id="container"></div>
+
+  <script>
+    // Example Base64 string (shortened for demo)
+    const base64String = "iVBORw0KGgoAAAANSUhEUgAA..."; // your Base64 code here
+
+    // Create an <img> element
+    const img = document.createElement("img");
+
+    // Set the src with proper prefix
+    img.src = "data:image/png;base64," + base64String;
+
+    // Append to container
+    document.getElementById("container").appendChild(img);
+  </script>
+</body>
+</html> -->
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map Location Picker</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <style>
+        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding: 20px; background: #f4f4f9; }
+        #map { height: 400px; width: 100%; max-width: 800px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .controls { margin-top: 20px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .coordinates { font-weight: bold; color: #2c3e50; }
+        button { padding: 10px 20px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 5px; transition: 0.3s; }
+        button:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+
+    <h2>Select Your Location</h2>
+    <div id="map"></div>
+
+    <div class="controls">
+        <button onclick="getUserLocation()">Find My Current Location</button>
+        <p>Selected Latitude: <span id="lat" class="coordinates">-</span></p>
+        <p>Selected Longitude: <span id="lng" class="coordinates">-</span></p>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <script>
+        // 1. Initialize the map (Centered on a default world view)
+        const map = L.map('map').setView([20, 0], 2);
+
+        // 2. Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        let marker;
+
+        // 3. Function to update text and move/create marker
+        function updateLocation(lat, lng) {
+            document.getElementById('lat').innerText = lat.toFixed(6);
+            document.getElementById('lng').innerText = lng.toFixed(6);
+
+            if (marker) {
+                marker.setLatLng([lat, lng]);
+            } else {
+                marker = L.marker([lat, lng], { draggable: true }).addTo(map);
+                // Update if the marker itself is dragged
+                marker.on('dragend', function(e) {
+                    const position = marker.getLatLng();
+                    updateLocation(position.lat, position.lng);
+                });
+            }
+            map.setView([lat, lng], 13);
+        }
+
+        // 4. Click on map to set location
+        map.on('click', function(e) {
+            updateLocation(e.latlng.lat, e.latlng.lng);
+        });
+
+        // 5. Browser Geolocation (Find Me button)
+        function getUserLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition((position) => {
+                    updateLocation(position.coords.latitude, position.coords.longitude);
+                }, () => {
+                    alert("Unable to retrieve your location.");
+                });
+            } else {
+                alert("Geolocation is not supported by your browser.");
+            }
+        }
+    </script>
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit a Report | CityCare</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="submit.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">City<span>Care</span></div>
+    <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="map.html">Map</a></li>
+        <li><a href="reports.html">Reports</a></li>
+        <li><button class="btn-primary">Report Issue</button></li>
+    </ul>
+</nav>
+
+<div class="submit-container">
+    <div class="form-card">
+        <h2><i class="fas fa-exclamation-circle"></i> Report a Local Issue</h2>
+        <p>Help us improve your neighborhood by providing details below.</p>
+
+        <form id="complaintForm">
+            <div class="upload-section">
+                <label for="file-upload" class="custom-file-upload">
+                    <i class="fas fa-camera"></i> Upload Photo
+                </label>
+                <input id="file-upload" type="file" name="image" accept="image/*">
+                <p class="file-info" id="file-name">Click to snap a photo or upload from gallery</p>
+            </div>
+
+            <div class="input-group">
+                <label>Issue Title</label>
+                <input type="text" name="title" placeholder="e.g. Broken Pothole" required>
+            </div>
+
+            <div class="input-group">
+                <label>Category</label>
+                <select name="category" required>
+                    <option value="">Select a Category</option>
+                    <option value="Garbage Management">Garbage Management</option>
+                    <option value="Streetlight / Electricity">Streetlight / Electricity</option>
+                    <option value="Roads & Potholes">Roads & Potholes</option>
+                    <option value="Water Leakage">Water Leakage</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>Location Details</label>
+                <div class="location-input">
+                    <input type="text" id="location-text" name="location" placeholder="Select on map..." readonly required>
+                    <button type="button" class="gps-btn" id="openMapBtn">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Description</label>
+                <textarea name="description" rows="4" placeholder="Describe the problem..."></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">Submit Report</button>
+        </form>
+    </div>
+</div>
+
+<div id="mapModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h3>Pinpoint Issue Location</h3>
+        <div id="map"></div>
+        <button type="button" class="submit-btn" id="confirmLocation">Confirm Location</button>
+    </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

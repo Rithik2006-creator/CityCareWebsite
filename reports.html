@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Reports | CityCare</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="report.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="logo">City<span>Care</span></div>
+        <input type="checkbox" id="check">
+        <label for="check" class="checkbtn"><i class="fas fa-bars"></i></label>
+        <ul class="nav-links">
+            <li><a href="home.html">Home</a></li>
+            <li><a href="map.html">Map</a></li>
+            <li><a href="About.html">About</a></li>
+            <li><a href="reports.html" class="active">Reports</a></li>
+            <li><button class="report-btn" id="openFormBtn">Report Issue</button></li>
+        </ul>
+    </nav>
+
+    <main class="reports-container">
+        <header class="reports-header">
+            <h1>Community Issues</h1>
+            <p>Track the progress of reported problems in your area.</p>
+            <div class="search-box">
+                <div class="search-input-wrapper">
+                    <input type="text" id="reportSearch" placeholder="Search by title or location...">
+                    <i class="fas fa-search"></i>
+                </div>
+            </div>
+            <div class="filter-bar">
+                <button class="filter-btn active">All</button>
+                <button class="filter-btn">Pending</button>
+                <button class="filter-btn">In Progress</button>
+                <button class="filter-btn">Resolved</button>
+            </div>
+        </header>
+
+        <section class="reports-grid" id="reportsGrid">
+        </section>
+    </main>
+
+    <div id="viewModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModals()">&times;</span>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <div id="formModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModals()">&times;</span>
+            <h2>Issue a Complaint Report</h2>
+            <form id="newReportForm">
+                <div class="upload-container">
+                    <label for="file-upload" class="upload-box" id="dropzone">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <span>Tap to upload or take a photo</span>
+                        <input id="file-upload" type="file" name="image" accept="image/*">
+                    </label>
+                    <div id="preview-wrapper" style="display:none;">
+                        <img id="imagePreview" src="#" alt="Preview">
+                        <p id="file-info"></p>
+                    </div>
+                </div>
+                <input type="text" id="formTitle" placeholder="Title (e.g., Broken Streetlight)" required>
+                <select id="formCategory" required>
+                    <option value="">Select a Category</option>
+                    <option value="Garbage Management">Garbage Management</option>
+                    <option value="Streetlight / Electricity">Streetlight / Electricity</option>
+                    <option value="Roads & Potholes">Roads & Potholes</option>
+                    <option value="Water Leakage">Water Leakage</option>
+                    <option value="other">Other</option>
+                </select>
+                <div class="location-input">
+                    <input type="text" id="formLocation" name="location" placeholder="Detecting your location..."
+                        required>
+                        <input type="hidden" name="latitude" placeholder="latitude" id="lat">
+                        <input type="hidden" name="longitude" placeholder="longitude" id="lng">
+                    <button type="button" class="gps-btn">
+                        <i class="fas fa-crosshairs"></i>
+                    </button>
+                </div>
+
+                <textarea id="formDesc" placeholder="Describe the issue in detail..." required></textarea>
+                <button type="submit" id="submit-btn">Post Report</button>
+            </form>
+        </div>
+    </div>
+    <div id="mapModal" class="modal inner-modal">
+        <div class="modal-content">
+            <span class="close" id="closeMapBtn">&times;</span>
+            <h3>Search & Select Location</h3>
+            <div id="map"></div>
+            <button type="button" class="btn-primary" id="confirmLocationBtn" style="width: 100%;">Confirm Address</button>
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2026 CityCare Platform. Empowering communities.</p>
+    </footer>
+    <script src="report.js"></script>
+</body>
+
+</html>

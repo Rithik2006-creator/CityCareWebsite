@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Issue Map | CityCare</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="map.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+</head>
+<body class="map-body">
+
+    <nav class="navbar">
+        <div class="logo">City<span>Care</span></div>
+        <input type="checkbox" id="check">
+        <label for="check" class="checkbtn">
+            <i class="fas fa-bars"></i>
+        </label>
+        <ul class="nav-links">
+            <li><a href="home.html">Home</a></li>
+            <li><a href="map.html" class="active">Map</a></li>
+            <li><a href="About.html">About</a></li>
+            <li><a href="reports.html">Reports</a></li>
+            <li><button class="btn-secondary">Report Issue</button></li>
+        </ul>
+    </nav>
+
+    <main class="map-interface">
+        <aside class="map-sidebar">
+            <div class="search-box">
+                <input type="text" placeholder="Search location...">
+                <i class="fas fa-search"></i>
+            </div>
+
+            <div class="filter-group">
+                <h4>Filter by Status</h4>
+                <label class="container">All
+                    <input type="checkbox" checked="checked" id="all">
+                    <span class="checkmark"></span>
+                </label>
+                <label class="container">Pending
+                    <input type="checkbox">
+                    <span class="checkmark"></span>
+                </label>
+                <label class="container">In Progress
+                    <input type="checkbox">
+                    <span class="checkmark"></span>
+                </label>
+                <label class="container">Resolved
+                    <input type="checkbox">
+                    <span class="checkmark"></span>
+                </label>
+            </div>
+
+            <div class="recent-activity">
+                <h4>Recent Reports</h4>
+                <!-- <div class="activity-item">
+                    <i class="fas fa-bolt" style="color: #f1c40f;"></i>
+                    <div>
+                        <p><strong>Broken Streetlight</strong></p>
+                        <small>2 mins ago - Oak St.</small>
+                    </div>
+                </div>
+                <div class="activity-item">
+                    <i class="fas fa-trash" style="color: #e74c3c;"></i>
+                    <div>
+                        <p><strong>Illegal Dumping</strong></p>
+                        <small>1 hour ago - 5th Ave.</small>
+                    </div>
+                </div> -->
+            </div>
+        </aside>
+
+        <section class="map-container">
+            <div id="map-placeholder">
+                <div class="map-overlay-info">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <p>Interactive Map Loading...</p>
+                    <small>(Integrate Leaflet.js or Google Maps here)</small>
+                </div>
+                
+                <div class="marker marker-1"><i class="fas fa-exclamation-triangle"></i></div>
+                <div class="marker marker-2"><i class="fas fa-tools"></i></div>
+            </div>
+        </section>
+    </main>
+     <script src="map.js"></script>
+</body>
+</html>

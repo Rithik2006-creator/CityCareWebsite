@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CityCare | Report & Resolve Local Issues</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <!-- <link rel="stylesheet" href="submit.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="logo">City<span>Care</span></div>
+        <input type="checkbox" id="check">
+        <label for="check" class="checkbtn">
+            <i class="fas fa-bars"></i>
+        </label>
+        <ul class="nav-links">
+            <li><a href="home.html">Home</a></li>
+            <li><a href="map.html">Map</a></li>
+            <li><a href="About.html">About</a></li>
+            <li><a href="reports.html">Reports</a></li>
+            <li class="user-profile" id="profile-btn">
+                <i class="fas fa-user-circle"></i>
+                <div id="profileDropdown" class="profile-dropdown">
+                    <div class="profile-header">
+                        <h4 id="displayUserName">User Name</h4>
+                        <p id="displayUserEmail">user@example.com</p>
+                    </div>
+                    <hr>
+                    <button onclick="logout()" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </li>
+        </ul>
+        <div id="chatbot-launcher" class="chatbot-fab" onclick="toggleChat()">
+            <i class="fas fa-comment-dots"></i>
+            <span class="chat-badge">1</span>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-content">
+            <h1>Make Your Neighborhood Better.</h1>
+            <p>See a pothole, broken streetlight, or garbage issue? Report it in seconds and track the fix.</p>
+        </div>
+    </header>
+
+    <section class="how-it-works">
+        <h2>How It Works</h2>
+        <div class="steps-container">
+            <div class="step">
+                <i class="fas fa-camera"></i>
+                <h3>Snap & Report</h3>
+                <p>Take a photo and describe the issue. Our system tags the GPS location automatically.</p>
+            </div>
+            <div class="step">
+                <i class="fas fa-bullhorn"></i>
+                <h3>Get Notified</h3>
+                <p>The report is sent directly to the relevant city department or local council.</p>
+            </div>
+            <div class="step">
+                <i class="fas fa-check-circle"></i>
+                <h3>See Progress</h3>
+                <p>Track the status of your report from 'Submitted' to 'Fixed' in real-time.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats">
+        <div class="stat-card">
+            <h3 id="fixed-count">0</h3>
+            <p>Issues Fixed</p>
+        </div>
+        <div class="stat-card">
+            <h3 id="active-count">0</h3>
+            <p>Active Reports</p>
+        </div>
+        <div class="stat-card">
+            <h3 id="response-time">0</h3>
+            <p> Total complaints filed</p>
+        </div>
+    </section>
+
+    <section class="categories">
+        <h2>Common Issues We Fix</h2>
+        <div class="category-grid">
+            <div class="cat-item">
+                <i class="fas fa-trash-alt"></i>
+                <span>Garbage</span>
+            </div>
+            <div class="cat-item">
+                <i class="fas fa-lightbulb"></i>
+                <span>Streetlights</span>
+            </div>
+            <div class="cat-item">
+                <i class="fas fa-road"></i>
+                <span>Potholes</span>
+            </div>
+            <div class="cat-item">
+                <i class="fas fa-tint"></i>
+                <span>Water Leaks</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="tips-section">
+        <h2>Reporting Tips</h2>
+        <div class="tips-grid">
+            <div class="tip-card">
+                <i class="fas fa-sun"></i>
+                <h4>Good Lighting</h4>
+                <p>Try to take photos during daylight so the maintenance crew can easily see the damage.</p>
+            </div>
+            <div class="tip-card">
+                <i class="fas fa-expand-arrows-alt"></i>
+                <h4>Wide & Close</h4>
+                <p>Upload one close-up of the issue and one wide shot showing the surrounding street.</p>
+            </div>
+            <div class="tip-card">
+                <i class="fas fa-map-pin"></i>
+                <h4>Precise Location</h4>
+                <p>Use the GPS pinpoint tool if you aren't sure of the exact house number.</p>
+            </div>
+        </div>
+    </section>
+<section class="waste-management">
+    <h2>Smart Waste Practices for Citizens</h2>
+    <p class="section-subtitle">Reporting is great, but reducing waste starts with us!</p>
+    
+    <div class="practices-grid">
+        <div class="practice-card">
+            <div class="practice-icon"><i class="fas fa-layer-group"></i></div>
+            <h4>Segregation at Source</h4>
+            <p>Keep <strong>Wet Waste</strong> (food scraps) and <strong>Dry Waste</strong> (paper, plastic, metal) in separate bins. This increases recycling efficiency by 70%.</p>
+        </div>
+
+        <div class="practice-card">
+            <div class="practice-icon"><i class="fas fa-leaf"></i></div>
+            <h4>Home Composting</h4>
+            <p>Turn your kitchen peels into "Black Gold" for your plants. It reduces the load on city landfills and prevents bad odors.</p>
+        </div>
+
+        <div class="practice-card">
+            <div class="practice-icon"><i class="fas fa-recycle"></i></div>
+            <h4>The 5 R’s</h4>
+            <p><strong>Refuse</strong> single-use plastics, <strong>Reduce</strong> what you buy, <strong>Reuse</strong> containers, <strong>Repurpose</strong> old items, and <strong>Recycle</strong> as a last resort.</p>
+        </div>
+
+        <div class="practice-card">
+            <div class="practice-icon"><i class="fas fa-plug"></i></div>
+            <h4>E-Waste Disposal</h4>
+            <p>Never throw batteries or old electronics in the regular trash. Take them to designated E-waste collection centers to prevent soil poisoning.</p>
+        </div>
+    </div>
+</section>
+    <section class="final-cta">
+        <div class="cta-content">
+            <h2>Ready to make a difference?</h2>
+            <p>Your voice is the first step toward a cleaner, safer city.</p>
+            <button class="btn-primary report-btn">Report Your First Issue</button>
+        </div>
+    </section>
+<section class="gov-links">
+    <div class="container">
+        <h2>Official Government Resources</h2>
+        <p>Stay connected with national cleanliness initiatives and your local authorities.</p>
+        
+        <div class="links-flex">
+            <a href="https://swachhbharatmission.gov.in/" target="_blank" class="gov-card">
+                <div class="gov-logo">
+                    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/e/e2/Swachh_Bharat_Abhiyan_logo.svg/1200px-Swachh_Bharat_Abhiyan_logo.svg.png" alt="Swachh Bharat Logo">
+                </div>
+                <div class="gov-info">
+                    <h4>Swachh Bharat Mission</h4>
+                    <p>Learn about the national campaign to clean up India's cities and infrastructure.</p>
+                    <span class="visit-link">Visit Website <i class="fas fa-external-link-alt"></i></span>
+                </div>
+            </a>
+
+            <a href="https://www.india.gov.in/topics/governance/municipal-corporations" target="_blank" class="gov-card">
+                <div class="gov-logo">
+                    <i class="fas fa-city"></i>
+                </div>
+                <div class="gov-info">
+                    <h4>Municipal Directory</h4>
+                    <p>Find the official website and contact details of your specific Municipal Corporation.</p>
+                    <span class="visit-link">Find Your City <i class="fas fa-external-link-alt"></i></span>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2026 CityCare Platform. Empowering communities.</p>
+        </div>
+    </footer>
+    <div class="submit-container">
+        <div class="form-card">
+            <span class="close-form" id="closeForm">&times;</span>
+            <h2><i class="fas fa-exclamation-circle"></i> Report a Local Issue</h2>
+            <p>Help us improve your neighborhood by providing details below.</p>
+
+            <form id="complaintForm">
+
+                <!-- IMAGE -->
+                <div class="upload-container">
+                    <label for="file-upload" class="upload-box" id="dropzone">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <span>Tap to upload or take a photo</span>
+                        <input id="file-upload" type="file" name="image" accept="image/*">
+                    </label>
+                    <div id="preview-wrapper" style="display:none;">
+                        <img id="imagePreview" src="#" alt="Preview">
+                        <p id="file-info"></p>
+                    </div>
+                </div>
+
+                <!-- TITLE -->
+                <div class="input-group">
+                    <label>Issue Title</label>
+                    <input type="text" name="title" placeholder="e.g. Broken Pothole, Blinking Streetlight" required>
+                </div>
+
+                <!-- CATEGORY -->
+                <div class="input-group">
+                    <label>Category</label>
+                    <select name="category" required>
+                        <option value="">Select a Category</option>
+                        <option value="Garbage Management">Garbage Management</option>
+                        <option value="Streetlight / Electricity">Streetlight / Electricity</option>
+                        <option value="Roads & Potholes">Roads & Potholes</option>
+                        <option value="Water Leakage">Water Leakage</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <!-- LOCATION -->
+                <div class="input-group">
+                    <label>Location Details</label>
+                    <div class="location-input">
+                        <input type="text" id="location-text" name="location" placeholder="Detecting your location...">
+                        <input type="hidden" name="latitude" placeholder="latitude" id="lat">
+                        <input type="hidden" name="longitude" placeholder="longitude" id="lng">
+                        <button type="button" class="gps-btn">
+                            <i class="fas fa-crosshairs"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- DESCRIPTION -->
+                <div class="input-group">
+                    <label>Description</label>
+                    <textarea name="description" rows="4" placeholder="Describe the problem in detail..."></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">Submit Report</button>
+            </form>
+        </div>
+    </div>
+    <div id="mapModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3>Pinpoint Issue Location</h3>
+            <div id="map"></div>
+            <button type="button" class="submit-btn" id="confirmLocation">Confirm Location</button>
+        </div>
+    </div>
+    <script>
+        // 1. Configuration & Global State
+        const CONFIG = {
+            API_URL: "https://nonendurable-russel-cachectical.ngrok-free.dev/complaint",
+            EMAIL: localStorage.getItem("email"),
+            AUTH: "Basic " + btoa(`${localStorage.getItem("email")}:${localStorage.getItem("password")}`)
+        };
+
+        const State = {
+            map: null,
+            marker: null,
+            selectedAddress: ""
+        };
+
+        // 2. Map Module Logic
+        const MapModule = {
+            init() {
+                if (State.map) return;
+                State.map = L.map("map").setView([19.18, 73.19], 13);
+                L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                    attribution: '© OpenStreetMap'
+                }).addTo(State.map);
+
+                State.map.on("click", (e) => this.updateMarker(e.latlng.lat, e.latlng.lng));
+            },
+
+            async updateMarker(lat, lng) {
+                document.getElementById("lat").value = lat;
+                document.getElementById("lng").value = lng;
+
+                if (!State.marker) {
+                    State.marker = L.marker([lat, lng], { draggable: true }).addTo(State.map);
+                    State.marker.on("dragend", () => {
+                        const pos = State.marker.getLatLng();
+                        this.updateMarker(pos.lat, pos.lng);
+                    });
+                } else {
+                    State.marker.setLatLng([lat, lng]);
+                }
+
+                // Reverse Geocoding
+                try {
+                    const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`);
+                    const data = await res.json();
+                    State.selectedAddress = data.display_name || "Selected Location";
+                    State.marker.bindPopup(State.selectedAddress).openPopup();
+                } catch {
+                    State.selectedAddress = "Custom Location";
+                }
+            }
+        };
+
+        // 3. UI Handlers
+        function closeAll() {
+
+            document.querySelector('.submit-container').style.display = 'none';
+            document.getElementById('mapModal').style.display = 'none';
+            document.body.style.overflow = "auto";
+        }
+        document.getElementById('closeForm').onclick = closeAll;
+        document.querySelector('.close-modal').onclick = closeAll;
+        document.querySelector('.report-btn').onclick = () => {
+            document.querySelector('.submit-container').style.display = 'flex';
+            document.body.style.overflow = "hidden";
+        };
+
+        document.querySelector('.gps-btn').onclick = () => {
+            document.getElementById('mapModal').style.display = 'block';
+            MapModule.init();
+            setTimeout(() => State.map.invalidateSize(), 300);
+        };
+
+        document.getElementById('confirmLocation').onclick = () => {
+            if (State.selectedAddress) {
+                document.getElementById('location-text').value = State.selectedAddress;
+                document.getElementById('mapModal').style.display = 'none';
+            } else {
+                alert("Please click on the map to select a location.");
+            }
+        };
+
+        // Image Preview Handler
+        document.getElementById('file-upload').onchange = function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    document.getElementById('imagePreview').src = event.target.result;
+                    document.getElementById('preview-wrapper').style.display = 'block';
+                    document.getElementById('dropzone').style.display = 'none';
+                    document.getElementById('file-info').innerText = file.name;
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        // 4. Form Submission Logic
+        document.getElementById('complaintForm').onsubmit = async (e) => {
+            e.preventDefault();
+
+            const btn = e.target.querySelector(".submit-btn");
+            const originalText = btn.innerText;
+
+            // Check for Location
+            if (!document.getElementById('lat').value) {
+                alert("Please use the GPS tool to select a location.");
+                return;
+            }
+
+            btn.innerText = "Processing...";
+            btn.disabled = true;
+
+            const form = e.target;
+            const complaintData = {
+                title: form.elements["title"].value,
+                category: form.elements["category"].value,
+                location: document.getElementById('location-text').value,
+                description: form.elements["description"].value,
+                latitude: document.getElementById('lat').value,
+                longitude: document.getElementById('lng').value,
+                userName: CONFIG.EMAIL
+            };
+
+            const formData = new FormData();
+            formData.append("accept", new Blob([JSON.stringify(complaintData)], { type: "application/json" }));
+
+            const fileInput = document.getElementById('file-upload');
+            if (fileInput.files[0]) {
+                formData.append("image", fileInput.files[0]);
+            }
+
+            try {
+                const response = await fetch(`${CONFIG.API_URL}/register`, {
+                    method: "POST",
+                    headers: {
+                        "Authorization": CONFIG.AUTH,
+                        "ngrok-skip-browser-warning": "true" // Required for ngrok URLs
+                    },
+                    body: formData
+                });
+
+                if (response.ok) {
+                    alert("Complaint registered successfully!");
+                    location.reload(); // Refresh to clear state
+                } else {
+                    const errorMsg = await response.text();
+                    alert("Submission failed: " + errorMsg);
+                }
+            } catch (err) {
+                alert("Network error. Please ensure the backend is running.");
+            } finally {
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
+        };
+
+        function toggleChat() {
+            const cburl = "https://rithik2006-creator.github.io/hello/";
+            window.open(cburl, "_blank");
+            const badge = document.querySelector('.chat-badge')
+            if (badge) {
+                badge.style.display = 'none';
+            }
+        }
+        // --- User Profile Logic ---
+
+const profileTrigger = document.getElementById('profile-btn');
+const profileDropdown = document.getElementById('profileDropdown');
+
+// Toggle Dropdown on click
+// Toggle Dropdown on click
+profileTrigger.addEventListener('click', (e) => {
+    e.stopPropagation(); 
+    
+   
+    const savedName = localStorage.getItem("userName");
+    const savedEmail = localStorage.getItem("email");
+
+    document.getElementById('displayUserName').innerText = savedName || "User";
+    document.getElementById('displayUserEmail').innerText = savedEmail || "Not Logged In";
+    
+    profileDropdown.classList.toggle('active');
+});
+
+
+profileDropdown.addEventListener('click', (e) => {
+    e.stopPropagation();
+});
+
+
+window.addEventListener('click', () => { 
+    profileDropdown.classList.remove('active');
+});
+
+
+function logout() {
+    if (confirm("Are you sure you want to logout?")) {
+        localStorage.clear(); 
+   
+        window.location.href = "https://nonendurable-russel-cachectical.ngrok-free.dev/index.html"; 
+    }
+}
+    </script>
+</body>
+
+</html>

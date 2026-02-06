@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Issue Map | CityCare</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
+    <link rel="stylesheet" href="submit.css">
+    <!-- <link rel="stylesheet" href="style.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="logo">City<span>Care</span></div>
+        <input type="checkbox" id="check">
+        <label for="check" class="checkbtn">
+            <i class="fas fa-bars"></i>
+        </label>
+        <ul class="nav-links">
+            <li><a href="home.html">Home</a></li>
+            <li><a href="map.html">Map</a></li>
+            <li><a href="About.html">About</a></li>
+            <li><a href="reports.html">Reports</a></li>
+        </ul>
+    </nav>
+
+    <div class="submit-container">
+        <div class="form-card">
+            <h2><i class="fas fa-exclamation-circle"></i> Report a Local Issue</h2>
+            <p>Help us improve your neighborhood by providing details below.</p>
+
+            <form id="complaintForm">
+
+                <!-- IMAGE -->
+                <div class="upload-section">
+                    <label for="file-upload" class="custom-file-upload">
+                        <i class="fas fa-camera"></i> Upload Photo
+                    </label>
+                    <input id="file-upload" type="file" name="image" accept="image/*">
+                    <p class="file-info">Click to snap a photo or upload from gallery</p>
+                </div>
+
+                <!-- TITLE -->
+                <div class="input-group">
+                    <label>Issue Title</label>
+                    <input type="text" name="title" placeholder="e.g. Broken Pothole, Blinking Streetlight" required>
+                </div>
+
+                <!-- CATEGORY -->
+                <div class="input-group">
+                    <label>Category</label>
+                    <select name="category" required>
+                        <option value="">Select a Category</option>
+                        <option value="Garbage Management">Garbage Management</option>
+                        <option value="Streetlight / Electricity">Streetlight / Electricity</option>
+                        <option value="Roads & Potholes">Roads & Potholes</option>
+                        <option value="Water Leakage">Water Leakage</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <!-- LOCATION -->
+                <div class="input-group">
+                    <label>Location Details</label>
+                    <div class="location-input">
+                        <input type="text" id="location-text" name="location" placeholder="Detecting your location...">
+                        <input type="hidden" name="latitude" placeholder="latitude" id="lat">
+                        <input type="hidden" name="longitude" placeholder="longitude" id="lng">
+                        <button type="button" class="gps-btn">
+                            <i class="fas fa-crosshairs"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- DESCRIPTION -->
+                <div class="input-group">
+                    <label>Description</label>
+                    <textarea name="description" rows="4" placeholder="Describe the problem in detail..."></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">Submit Report</button>
+            </form>
+        </div>
+    </div>
+    <div id="mapModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3>Pinpoint Issue Location</h3>
+            <div id="map"></div>
+            <button type="button" class="submit-btn" id="confirmLocation">Confirm Location</button>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById("complaintForm");
+        const modal = document.getElementById("mapModal");
+        const openMapBtn = document.querySelector(".gps-btn");
+        const closeBtn = document.querySelector(".close-modal");
+        const locationInput = document.getElementById("location-text");
+        const confirmBtn = document.getElementById("confirmLocation");
+        const fileInput = document.getElementById("file-upload");
+        const categoryStyles = {
+            "Garbage Management": { color: "#e74c3c", icon: "fa-trash" },         // Red
+            "Streetlight / Electricity": { color: "#f1c40f", icon: "fa-bolt" },   // Yellow
+            "Roads & Potholes": { color: "#7f8c8d", icon: "fa-road" },           // Gray
+            "Water Leakage": { color: "#3498db", icon: "fa-droplet" },           // Blue
+            "other": { color: "#9b59b6", icon: "fa-circle-exclamation" }         // Purple
+        };
+        let map, marker
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData();
+
+            // 1️⃣ Build complaint object (must match record fields)
+            const complaintAccept = {
+                title: form.querySelector('input[name="title"]').value,
+                category: form.querySelector('select[name="category"]').value,
+                location: form.querySelector('input[name="location"]').value,
+                description: form.querySelector('textarea[name="description"]').value,
+                latitude: form.querySelector('#lat').value,
+                longitude: form.querySelector('#lng').value,
+                userName:localStorage.getItem("email")
+
+            };
+
+            // 2️⃣ Append JSON as multipart part
+            formData.append(
+                "accept",
+                new Blob([JSON.stringify(complaintAccept)], {
+                    type: "application/json"
+                })
+            );
+
+            // 3️⃣ Append image
+            const imageInput = document.getElementById("file-upload");
+            if (imageInput.files.length > 0) {
+                formData.append("image", imageInput.files[0]);
+            } else {
+                alert("Please upload an image of the issue.");
+                return;
+            }
+
+            try {
+                console.log("xyz")
+                const response = await fetch(
+                    "https://nonendurable-russel-cachectical.ngrok-free.dev/complaint/register",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Authorization": "Basic " + btoa(`${localStorage.getItem("email")}:${localStorage.getItem("password")}`)
+                        },
+                        body: formData
+                    }
+                );
+
+                if (!response.ok) {
+                    throw new Error("Submission failed");
+                }
+
+                alert("Complaint submitted successfully!");
+                form.reset();
+
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Error submitting complaint");
+            }
+
+        });
+        let selectedAddress = "";
+
+        async function fetchPlaceName(lat, lng) {
+            try {
+                const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&accept-language=en`);
+                const data = await response.json();
+                return data.display_name || "Unknown Location";
+            } catch (error) {
+                console.error("Geocoding failed", error);
+                return "Custom Location";
+            }
+        }
+
+        // --- 2. Marker Tag (Popup) Update ---
+        // ADDED: addressString as a parameter here
+        let currentLat, currentLng; // Add these global variables at the top
+
+        async function updateMarker(lat, lng, addressString = null) {
+            // Store current coordinates globally so "Confirm" can grab them
+            currentLat = lat;
+            currentLng = lng;
+
+            const category = form.querySelector('select[name="category"]').value;
+            const style = categoryStyles[category] || { color: "#2c3e50", icon: "fa-location-dot" };
+
+            const customIcon = L.divIcon({
+                className: 'custom-pin',
+                html: `
+            <div style="background-color: ${style.color}; width: 34px; height: 34px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); display: flex; align-items: center; justify-content: center; border: 2px solid white; box-shadow: 0 0 8px rgba(0,0,0,0.4);">
+                <i class="fas ${style.icon}" style="color: white; transform: rotate(45deg); font-size: 14px;"></i>
+            </div>`,
+                iconSize: [34, 34],
+                iconAnchor: [17, 34]
+            });
+            if (!marker) {
+                marker = L.marker([lat, lng], { draggable: true }).addTo(map);
+
+                // This is the trigger for when you STOP dragging
+                marker.on('dragend', async (e) => {
+                    const pos = marker.getLatLng();
+                    // Recursive call to update address and global variables
+                    updateMarker(pos.lat, pos.lng);
+                });
+            } else {
+                marker.setLatLng([lat, lng]);
+                marker.setIcon(customIcon);
+            }
+
+            selectedAddress = addressString ? addressString : await fetchPlaceName(lat, lng);
+            marker.bindPopup(`<b>Selected Place:</b><br>${selectedAddress}`).openPopup();
+        }
+
+        // --- 3. Map Initialization ---
+        function initMap() {
+            if (map) return;
+            map = L.map('map').setView([20, 0], 2);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap'
+            }).addTo(map);
+
+            // ADD SEARCH BAR (GEOCODER)
+            const geocoder = L.Control.geocoder({
+                defaultMarkGeocode: false,
+                placeholder: "Type your address..."
+            })
+                .on('markgeocode', function (e) {
+                    const center = e.geocode.center;
+                    const name = e.geocode.name;
+
+                    map.setView(center, 16);
+                    // Pass the name to updateMarker
+                    updateMarker(center.lat, center.lng, name);
+                })
+                .addTo(map);
+
+            map.on('click', (e) => {
+                updateMarker(e.latlng.lat, e.latlng.lng);
+            });
+        }
+
+        // --- 4. Open Modal & Get GPS ---
+        openMapBtn.onclick = () => {
+            modal.style.display = "block";
+            initMap();
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(async (pos) => {
+                    const { latitude, longitude } = pos.coords;
+                    map.setView([latitude, longitude], 16);
+                    updateMarker(latitude, longitude);
+                });
+            }
+            setTimeout(() => map.invalidateSize(), 200);
+        };
+
+        confirmBtn.onclick = () => {
+            if (selectedAddress && currentLat && currentLng) {
+                // 1. Update the visible text input
+                locationInput.value = selectedAddress;
+
+                // 2. Update the hidden form inputs
+                document.getElementById("lat").value = currentLat;
+                document.getElementById("lng").value = currentLng;
+
+                // 3. Update localStorage as a backup
+                localStorage.setItem("latitude", currentLat);
+                localStorage.setItem("longitude", currentLng);
+
+                // 4. Close modal
+                modal.style.display = "none";
+            } else {
+                alert("Please select or search a location first.");
+            }
+        };
+        // Add this near your other event listeners
+        form.querySelector('select[name="category"]').addEventListener('change', () => {
+            // If the map is open and marker exists, refresh it with new color
+            if (marker && currentLat && currentLng) {
+                updateMarker(currentLat, currentLng, selectedAddress);
+            }
+        });
+        closeBtn.onclick = () => modal.style.display = "none";
+    </script>
+</body>
+
+</html>
