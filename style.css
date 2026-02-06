@@ -312,6 +312,7 @@ footer {
 }
 /* Hide the complaint container by default */
 .submit-container {
+    
     display: none;
     position: fixed;
     z-index: 1000;
@@ -322,7 +323,22 @@ footer {
     padding: 20px;
     justify-content: center; /* Horizontal centering */
     align-items: center;
+    overflow-y: scroll;
 }
+.submit-container {
+    display: none;                
+    inset: 0;
+    z-index: 1000;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(6px);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;       
+    padding: 40px 20px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
 
 /* Ensure the form card is centered */
 .form-card {
