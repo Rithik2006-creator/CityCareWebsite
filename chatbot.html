@@ -229,22 +229,31 @@
       messageBox.appendChild(typing);
       messageBox.scrollTop = messageBox.scrollHeight;
 
-      try {
-        const response = await fetch(
-          `https://nonendurable-russel-cachectical.ngrok-free.dev/api/${encodeURIComponent(message)}`,
-          {
-            headers: {
-              "ngrok-skip-browser-warning": "true"
-            }
-          }
-        );
+try {
+  const email = localStorage.getItem("email");
 
-        const text = await response.text();
-        typing.innerHTML = `<pre>${text.replace(/\*/g, "")}</pre>`;
-      } catch (err) {
-        typing.textContent = "❌ Server error. Please try again.";
-        console.error(err);
+  if (!email) {
+    typing.textContent = "❌ Email not found. Please login again.";
+    return;
+  }
+
+  const response = await fetch(
+    `https://nonendurable-russel-cachectical.ngrok-free.dev/api/${encodeURIComponent(message)}`,
+    {
+      headers: {
+        "ngrok-skip-browser-warning": "true",
+        "X-User-Email": email   // ✅ added
       }
+    }
+  );
+
+  const text = await response.text();
+  typing.innerHTML = `<pre>${text.replace(/\*/g, "")}</pre>`;
+} catch (err) {
+  typing.textContent = "❌ Server error. Please try again.";
+  console.error(err);
+}
+
 
       messageBox.scrollTop = messageBox.scrollHeight;
     }
