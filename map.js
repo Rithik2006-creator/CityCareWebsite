@@ -1,8 +1,8 @@
 
-    const reportbtn=document.querySelector(".btn-secondary")
-    reportbtn.addEventListener("click",()=> {
-        window.location.href = "complaint.html";
-    })
+    // const reportbtn=document.querySelector(".btn-secondary")
+    // reportbtn.addEventListener("click",()=> {
+    //     window.location.href = "complaint.html";
+    // })
  // 1. Data Structure for Issues
 // In a real app, this would come from a database/API
 // const issues = [
