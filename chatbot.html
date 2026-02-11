@@ -11,6 +11,10 @@
       --light-green: #c8e6c9;
       --gray: #f5f5f5;
       --dark-gray: #555;
+      --black:black;
+    }
+    .logo{
+      color: gray
     }
 
     * {
@@ -34,7 +38,7 @@
     /* ================= NAVBAR ================= */
     .top-nav {
       height: 60px;
-      background: var(--green);
+      background: var(--black);
       color: #fff;
       display: flex;
       align-items: center;
@@ -55,9 +59,10 @@
     }
 
     .nav-links a {
+      font-size: 1.1em;
       color: #fff;
       text-decoration: none;
-      font-size: 0.9rem;
+    
     }
 
     .menu-toggle {
@@ -74,7 +79,7 @@
         position: absolute;
         top: 60px;
         right: 0;
-        background: var(--green);
+        background: black;
         flex-direction: column;
         width: 200px;
         padding: 1rem;
@@ -93,9 +98,13 @@
       flex-direction: column;
       background: #fff;
     }
+    .message.bot{
+      background-color: rgba(19, 248, 57, 0.199);
+    }
 
     .chat-header {
       background: var(--light-green);
+      background: gainsboro;
       padding: 1rem;
       text-align: center;
       border-bottom: 1px solid #ddd;
@@ -111,6 +120,7 @@
     }
 
     .message {
+      
       max-width: 75%;
       padding: 0.6rem 0.9rem;
       margin-bottom: 0.6rem;
@@ -137,15 +147,28 @@
       color: #1b5e20;
       align-self: flex-end;
     }
+    .logo {
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.logo span { 
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #2ecc71;
+}
 
     .chat-input {
+      
       display: flex;
       padding: 0.8rem;
       border-top: 1px solid #ddd;
-      background: #fff;
+      background: #ffffff;
+      
     }
 
     .chat-input input {
+      
       flex: 1;
       padding: 0.6rem 0.9rem;
       border: 1px solid #ccc;
@@ -159,7 +182,7 @@
       padding: 0.6rem 1.1rem;
       border: none;
       border-radius: 20px;
-      background: var(--green);
+      background: rgb(5, 190, 5);
       color: #fff;
       cursor: pointer;
     }
@@ -174,26 +197,26 @@
 
   <!-- ================= NAVBAR ================= -->
   <nav class="top-nav">
-    <div class="logo">GreenCity</div>
+    <div class="logo">City<span>Care</span></div>
     <div class="menu-toggle" onclick="toggleMenu()">☰</div>
     <ul class="nav-links" id="navLinks">
-      <li><a href="#">Home</a></li>
-      <li><a href="#">Report Waste</a></li>
-      <li><a href="#">Chatbot</a></li>
-      <li><a href="#">Login</a></li>
+      <li><a href="https://rithik2006-creator.github.io/CityCareWebsite/home.html">Home</a></li>
+      <li><a href="https://rithik2006-creator.github.io/CityCareWebsite/reports.html">Report Waste</a></li>
+      <li><a href="https://rithik2006-creator.github.io/CityCareWebsite/chatbot.html">Chatbot</a></li>
+    
     </ul>
   </nav>
 
   <!-- ================= CHAT ================= -->
   <div class="chat-container">
     <div class="chat-header">
-      <h3>GreenCity Assistant</h3>
+      <h3>CityCare Assistant</h3>
       <p>Ask questions related to waste management & city services</p>
     </div>
 
     <div class="chat-body" id="messageBox">
       <div class="message bot">
-        Hello 👋 I’m the GreenCity Assistant. How can I help you today?
+        Hello 👋 I’m the CityCare Assistant. How can I help you today?
       </div>
     </div>
 
