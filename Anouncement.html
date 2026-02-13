@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mumbai City | Official Announcements</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Specific Styles for Announcement Cards to match your theme */
+        .announcement-container {
+            padding: 4rem 10%;
+            min-height: 80vh;
+        }
+
+        .announcement-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .announcement-header h2 {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .announcement-header .underline {
+            width: 80px;
+            height: 4px;
+            background: #2ecc71;
+            margin: 0 auto;
+            border-radius: 2px;
+        }
+
+        .announcement-list {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .announcement-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 25px;
+            border-left: 6px solid #2ecc71;
+            /* Matches your theme green */
+            transition: 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .announcement-card:hover {
+            transform: translateX(10px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .announcement-card.urgent {
+            border-left-color: #e74c3c;
+            /* Red for urgent */
+        }
+
+        .announcement-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            margin-bottom: 12px;
+        }
+
+        .announcement-meta i {
+            color: #2ecc71;
+        }
+
+        .announcement-card h3 {
+            color: #2c3e50;
+            margin-bottom: 12px;
+            font-size: 1.4rem;
+        }
+
+        .announcement-content {
+            color: #555;
+            line-height: 1.7;
+        }
+
+        .badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            background: #f0f7ff;
+            color: #3498db;
+        }
+
+        .badge.urgent-bg {
+            background: #fdedec;
+            color: #e74c3c;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="logo">City<span>Care</span></div>
+        <input type="checkbox" id="check">
+        <label for="check" class="checkbtn">
+            <i class="fas fa-bars"></i>
+        </label>
+        <ul class="nav-links">
+            <li><a href="home.html">Home</a></li>
+            <li><a href="map.html">Map</a></li>
+            <li><a href="About.html">About</a></li>
+            <li><a href="reports.html">Reports</a></li>
+            <li class="user-profile" id="profile-btn">
+                <i class="fas fa-user-circle"></i>
+                <div id="profileDropdown" class="profile-dropdown">
+                    <div class="profile-header">
+                        <h4 id="displayUserName">User Name</h4>
+                        <p id="displayUserEmail">user@example.com</p>
+                    </div>
+                    <hr>
+                    <button onclick="logout()" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </li>
+        </ul>
+       
+    </nav>
+
+    <div class="announcement-container">
+        <div class="announcement-header">
+            <h2><i class="fas fa-bullhorn" style="color: #2ecc71;"></i> CityCare Announcements</h2>
+            <div class="underline"></div>
+            <p style="margin-top: 15px; color: #7f8c8d;">Important notifications regarding city infrastructure and waste
+                management.</p>
+        </div>
+
+        <div class="announcement-list" id="announcement-list">
+    <p style="text-align: center; color: #7f8c8d;">Loading latest announcements...</p>
+</div>
+    </div>
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2026 CityCare Platform. Empowering communities.</p>
+        </div>
+    </footer>
+<script>
+
+    // 1. Configuration (Matching your Home page settings)
+    const CONFIG = {
+        API_URL: "https://nonendurable-russel-cachectical.ngrok-free.dev/announcements", // Adjust endpoint name if different
+        AUTH: "Basic " + btoa(`${localStorage.getItem("email")}:${localStorage.getItem("password")}`)
+    };
+
+    // 2. Run fetch on page load
+    document.addEventListener('DOMContentLoaded', fetchAnnouncements);
+
+    async function fetchAnnouncements() {
+        const listContainer = document.getElementById('announcement-list');
+
+        try {
+            const response = await fetch(CONFIG.API_URL, {
+                method: "GET",
+                headers: {
+                    "Authorization": CONFIG.AUTH,
+                    "ngrok-skip-browser-warning": "true"
+                }
+            });
+
+            if (!response.ok) throw new Error("Failed to fetch");
+
+            const announcements = await response.json();
+            
+            // Clear the loading text
+            listContainer.innerHTML = '';
+
+            if (announcements.length === 0) {
+                listContainer.innerHTML = '<p style="text-align:center;">No new announcements at this time.</p>';
+                return;
+            }
+
+            // 3. Loop through data and create cards
+            announcements.forEach(item => {
+                const isUrgent = item.priority === 'High' || item.type === 'Urgent';
+                const card = document.createElement('div');
+                
+                // Add classes based on urgency
+                card.className = `announcement-card ${isUrgent ? 'urgent' : ''}`;
+
+                card.innerHTML = `
+                    ${isUrgent ? '<span class="badge urgent-bg">Urgent</span>' : '<span class="badge">Update</span>'}
+                    <div class="announcement-meta">
+                        <span><i class="fas fa-calendar-day"></i> ${formatDate(item.createdAt || new Date())}</span>
+                        <span><i class="fas fa-tag"></i> ${item.category || 'General'}</span>
+                    </div>
+                    <h3>${item.title}</h3>
+                    <p class="announcement-content">${item.content || item.description}</p>
+                `;
+                
+                listContainer.appendChild(card);
+            });
+
+        } catch (error) {
+            console.error("Error:", error);
+            listContainer.innerHTML = `<p style="color:red; text-align:center;">Unable to load announcements. Please try again later.</p>`;
+        }
+    }
+
+    // Helper to format date nicely
+    function formatDate(dateString) {
+        const options = { year: 'numeric', month: 'short', day: 'numeric' };
+        return new Date(dateString).toLocaleDateString(undefined, options);
+    }
+
+</script>
+</body>
+
+</html>
