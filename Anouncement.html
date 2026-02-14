@@ -156,8 +156,8 @@
 
     // 1. Configuration (Matching your Home page settings)
     const CONFIG = {
-        API_URL: "https://nonendurable-russel-cachectical.ngrok-free.dev/announcements", // Adjust endpoint name if different
-        AUTH: "Basic " + btoa(`${localStorage.getItem("email")}:${localStorage.getItem("password")}`)
+        API_URL: "https://nonendurable-russel-cachectical.ngrok-free.dev/api/getAnnouncements", // Adjust endpoint name if different
+        // AUTH: "Basic " + btoa(`${localStorage.getItem("email")}:${localStorage.getItem("password")}`)
     };
 
     // 2. Run fetch on page load
@@ -170,7 +170,7 @@
             const response = await fetch(CONFIG.API_URL, {
                 method: "GET",
                 headers: {
-                    "Authorization": CONFIG.AUTH,
+                    // "Authorization": CONFIG.AUTH,
                     "ngrok-skip-browser-warning": "true"
                 }
             });
@@ -196,10 +196,10 @@
                 card.className = `announcement-card ${isUrgent ? 'urgent' : ''}`;
 
                 card.innerHTML = `
-                    ${isUrgent ? '<span class="badge urgent-bg">Urgent</span>' : '<span class="badge">Update</span>'}
+                   
                     <div class="announcement-meta">
-                        <span><i class="fas fa-calendar-day"></i> ${formatDate(item.createdAt || new Date())}</span>
-                        <span><i class="fas fa-tag"></i> ${item.category || 'General'}</span>
+                       
+                        <span><i class="fas fa-tag"></i> ${item.title || 'General'}</span>
                     </div>
                     <h3>${item.title}</h3>
                     <p class="announcement-content">${item.content || item.description}</p>
