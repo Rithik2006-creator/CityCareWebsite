@@ -43,6 +43,10 @@
             <i class="fas fa-comment-dots"></i>
             <span class="chat-badge">1</span>
         </div>
+        <div id="announcement-launcher" class="announcement-fab" onclick="toggle()">
+            <i class="fas fa-bullhorn"></i>
+            <span class="announcement-badge">1</span>
+        </div>
     </nav>
 
     <header class="hero">
@@ -82,10 +86,10 @@
             <h3 id="active-count">0</h3>
             <p>Active Reports</p>
         </div>
-          <div class="stat-card">
-                    <h3 id="active-count">0</h3>
-                    <p>Issues Pending</p>
-                </div>
+        <div class="stat-card">
+            <h3 id="active-count">0</h3>
+            <p>Issues Pending</p>
+        </div>
 
         <div class="stat-card">
             <h3 id="response-time">0</h3>
@@ -135,36 +139,41 @@
             </div>
         </div>
     </section>
-<section class="waste-management">
-    <h2>Smart Waste Practices for Citizens</h2>
-    <p class="section-subtitle">Reporting is great, but reducing waste starts with us!</p>
-    
-    <div class="practices-grid">
-        <div class="practice-card">
-            <div class="practice-icon"><i class="fas fa-layer-group"></i></div>
-            <h4>Segregation at Source</h4>
-            <p>Keep <strong>Wet Waste</strong> (food scraps) and <strong>Dry Waste</strong> (paper, plastic, metal) in separate bins. This increases recycling efficiency by 70%.</p>
-        </div>
+    <section class="waste-management">
+        <h2>Smart Waste Practices for Citizens</h2>
+        <p class="section-subtitle">Reporting is great, but reducing waste starts with us!</p>
 
-        <div class="practice-card">
-            <div class="practice-icon"><i class="fas fa-leaf"></i></div>
-            <h4>Home Composting</h4>
-            <p>Turn your kitchen peels into "Black Gold" for your plants. It reduces the load on city landfills and prevents bad odors.</p>
-        </div>
+        <div class="practices-grid">
+            <div class="practice-card">
+                <div class="practice-icon"><i class="fas fa-layer-group"></i></div>
+                <h4>Segregation at Source</h4>
+                <p>Keep <strong>Wet Waste</strong> (food scraps) and <strong>Dry Waste</strong> (paper, plastic, metal)
+                    in separate bins. This increases recycling efficiency by 70%.</p>
+            </div>
 
-        <div class="practice-card">
-            <div class="practice-icon"><i class="fas fa-recycle"></i></div>
-            <h4>The 5 R’s</h4>
-            <p><strong>Refuse</strong> single-use plastics, <strong>Reduce</strong> what you buy, <strong>Reuse</strong> containers, <strong>Repurpose</strong> old items, and <strong>Recycle</strong> as a last resort.</p>
-        </div>
+            <div class="practice-card">
+                <div class="practice-icon"><i class="fas fa-leaf"></i></div>
+                <h4>Home Composting</h4>
+                <p>Turn your kitchen peels into "Black Gold" for your plants. It reduces the load on city landfills and
+                    prevents bad odors.</p>
+            </div>
 
-        <div class="practice-card">
-            <div class="practice-icon"><i class="fas fa-plug"></i></div>
-            <h4>E-Waste Disposal</h4>
-            <p>Never throw batteries or old electronics in the regular trash. Take them to designated E-waste collection centers to prevent soil poisoning.</p>
+            <div class="practice-card">
+                <div class="practice-icon"><i class="fas fa-recycle"></i></div>
+                <h4>The 5 R’s</h4>
+                <p><strong>Refuse</strong> single-use plastics, <strong>Reduce</strong> what you buy,
+                    <strong>Reuse</strong> containers, <strong>Repurpose</strong> old items, and
+                    <strong>Recycle</strong> as a last resort.</p>
+            </div>
+
+            <div class="practice-card">
+                <div class="practice-icon"><i class="fas fa-plug"></i></div>
+                <h4>E-Waste Disposal</h4>
+                <p>Never throw batteries or old electronics in the regular trash. Take them to designated E-waste
+                    collection centers to prevent soil poisoning.</p>
+            </div>
         </div>
-    </div>
-</section>
+    </section>
     <section class="final-cta">
         <div class="cta-content">
             <h2>Ready to make a difference?</h2>
@@ -172,36 +181,37 @@
             <button class="btn-primary report-btn">Report Your First Issue</button>
         </div>
     </section>
-<section class="gov-links">
-    <div class="container">
-        <h2>Official Government Resources</h2>
-        <p>Stay connected with national cleanliness initiatives and your local authorities.</p>
-        
-        <div class="links-flex">
-            <a href="https://swachhbharatmission.gov.in/" target="_blank" class="gov-card">
-                <div class="gov-logo">
-                    <img src="Swacha bharat.png" alt="Swachh Bharat Logo">
-                </div>
-                <div class="gov-info">
-                    <h4>Swachh Bharat Mission</h4>
-                    <p>Learn about the national campaign to clean up India's cities and infrastructure.</p>
-                    <span class="visit-link">Visit Website <i class="fas fa-external-link-alt"></i></span>
-                </div>
-            </a>
+    <section class="gov-links">
+        <div class="container">
+            <h2>Official Government Resources</h2>
+            <p>Stay connected with national cleanliness initiatives and your local authorities.</p>
 
-            <a href="https://www.india.gov.in/topics/governance/municipal-corporations" target="_blank" class="gov-card">
-                <div class="gov-logo">
-                    <i class="fas fa-city"></i>
-                </div>
-                <div class="gov-info">
-                    <h4>Municipal Directory</h4>
-                    <p>Find the official website and contact details of your specific Municipal Corporation.</p>
-                    <span class="visit-link">Find Your City <i class="fas fa-external-link-alt"></i></span>
-                </div>
-            </a>
+            <div class="links-flex">
+                <a href="https://swachhbharatmission.gov.in/" target="_blank" class="gov-card">
+                    <div class="gov-logo">
+                        <img src="Swacha bharat.png" alt="Swachh Bharat Logo">
+                    </div>
+                    <div class="gov-info">
+                        <h4>Swachh Bharat Mission</h4>
+                        <p>Learn about the national campaign to clean up India's cities and infrastructure.</p>
+                        <span class="visit-link">Visit Website <i class="fas fa-external-link-alt"></i></span>
+                    </div>
+                </a>
+
+                <a href="https://www.india.gov.in/topics/governance/municipal-corporations" target="_blank"
+                    class="gov-card">
+                    <div class="gov-logo">
+                        <i class="fas fa-city"></i>
+                    </div>
+                    <div class="gov-info">
+                        <h4>Municipal Directory</h4>
+                        <p>Find the official website and contact details of your specific Municipal Corporation.</p>
+                        <span class="visit-link">Find Your City <i class="fas fa-external-link-alt"></i></span>
+                    </div>
+                </a>
+            </div>
         </div>
-    </div>
-</section>
+    </section>
     <footer>
         <div class="footer-content">
             <p>&copy; 2026 CityCare Platform. Empowering communities.</p>
@@ -360,7 +370,7 @@
                 alert("Please click on the map to select a location.");
             }
         };
-    
+
 
         // Image Preview Handler
         document.getElementById('file-upload').onchange = function (e) {
@@ -445,63 +455,73 @@
                 badge.style.display = 'none';
             }
         }
+        function toggle() {
+            // Use a relative path (assuming Anouncement.html is in the same folder)
+            const cburl = "Anouncement.html";
+            window.open(cburl, "_blank");
+
+            const badge = document.querySelector('.announcement-badge');
+            if (badge) {
+                badge.style.display = 'none';
+            }
+        }
         // --- User Profile Logic ---
 
-const profileTrigger = document.getElementById('profile-btn');
-const profileDropdown = document.getElementById('profileDropdown');
+        const profileTrigger = document.getElementById('profile-btn');
+        const profileDropdown = document.getElementById('profileDropdown');
 
-// Toggle Dropdown on click
-// Toggle Dropdown on click
-profileTrigger.addEventListener('click', (e) => {
-    e.stopPropagation(); 
-    
-   
-    const savedName = localStorage.getItem("userName");
-    const savedEmail = localStorage.getItem("email");
-
-    document.getElementById('displayUserName').innerText = savedName || "User";
-    document.getElementById('displayUserEmail').innerText = savedEmail || "Not Logged In";
-    
-    profileDropdown.classList.toggle('active');
-});
+        // Toggle Dropdown on click
+        // Toggle Dropdown on click
+        profileTrigger.addEventListener('click', (e) => {
+            e.stopPropagation();
 
 
-profileDropdown.addEventListener('click', (e) => {
-    e.stopPropagation();
-});
+            const savedName = localStorage.getItem("userName");
+            const savedEmail = localStorage.getItem("email");
+
+            document.getElementById('displayUserName').innerText = savedName || "User";
+            document.getElementById('displayUserEmail').innerText = savedEmail || "Not Logged In";
+
+            profileDropdown.classList.toggle('active');
+        });
 
 
-window.addEventListener('click', () => { 
-    profileDropdown.classList.remove('active');
-});
+        profileDropdown.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
 
-getCount()
-function logout() {
-    if (confirm("Are you sure you want to logout?")) {
-        localStorage.clear(); 
-   
-        window.location.href = "https://rithik2006-creator.github.io/CityCareWebsite"; 
-    }
-}
- function getCount(){
-    const stat_div = document.getElementById("countStat");
 
-    fetch("https://nonendurable-russel-cachectical.ngrok-free.dev/complaint/getCount",{
-    headers:{
-      "ngrok-skip-browser-warning": true
-    }
-}
-    )
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Failed to fetch count data");
+        window.addEventListener('click', () => {
+            profileDropdown.classList.remove('active');
+        });
+
+        getCount()
+        function logout() {
+            if (confirm("Are you sure you want to logout?")) {
+                localStorage.clear();
+
+                window.location.href = "https://nonendurable-russel-cachectical.ngrok-free.dev/index.html";
             }
-            return response.json();
-        })
-        .then(stats => {
-          
-          
-            stat_div.innerHTML = `
+        }
+        function getCount() {
+            const stat_div = document.getElementById("countStat");
+
+            fetch("https://nonendurable-russel-cachectical.ngrok-free.dev/complaint/getCount", {
+                headers: {
+                    "ngrok-skip-browser-warning": true
+                }
+            }
+            )
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Failed to fetch count data");
+                    }
+                    return response.json();
+                })
+                .then(stats => {
+
+
+                    stat_div.innerHTML = `
                 <div class="stat-card">
                     <h3 id="fixed-count">${stats.issueFixed}</h3>
                     <p>Issues Fixed</p>
@@ -522,12 +542,12 @@ function logout() {
                     <p>Total complaints filed</p>
                 </div>
             `;
-        })
-        .catch(err => {
-            console.error(err);
-            stat_div.innerHTML = `<p style="color:red">Failed to load statistics</p>`;
-        });
-}
+                })
+                .catch(err => {
+                    console.error(err);
+                    stat_div.innerHTML = `<p style="color:red">Failed to load statistics</p>`;
+                });
+        }
 
     </script>
 </body>
