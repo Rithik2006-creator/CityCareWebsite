@@ -113,11 +113,56 @@ body {
     border-radius: 50%;
     border: 2px solid white;
 }
+/* Chatbot FAB */
+.announcement-fab {
+    position: fixed;
+    bottom: 120px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    cursor: pointer;
+    z-index: 9999;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.announcement-fab:hover {
+    transform: scale(1.1);
+}
+
+.announcement-fab i {
+    color: white;
+    font-size: 1.8rem;
+}
+
+/* Notification Badge on Chatbot */
+.announcement-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #e74c3c;
+    color: white;
+    font-size: 0.7rem;
+    padding: 4px 8px;
+    border-radius: 50%;
+    border: 2px solid white;
+}
 
 /* Mobile Adjustment for Chatbot */
 @media (max-width: 600px) {
     .chatbot-fab {
         bottom: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+    }
+    .announcement-fab {
+        bottom: 40px;
         right: 20px;
         width: 50px;
         height: 50px;
