@@ -295,23 +295,31 @@
         }
 
         try {
-          const response = await fetch(`${API_BASE_URL}/register`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ fullName, email, password }),
-          });
+  const response = await fetch(`${API_BASE_URL}/register`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ fullName, email, password }),
+  });
 
-          if (!response.ok) {
-            throw new Error("Signup failed");
-          }
-          
-          alert("Account created successfully! Please login.");
-          switchTab("login");
-        } catch (err) {
-          alert(err.message);
-        }
+  if (response.status === 409) {
+    alert("Account already exists");
+    return; // STOP execution
+  }
+
+  if (!response.ok) {
+    const errorMsg = await response.text(); // or json()
+    throw new Error(errorMsg || "Registration failed");
+  }
+
+  alert("Account created successfully! Please login.");
+  switchTab("login");
+
+} catch (err) {
+  alert(err.message || "Network error");
+}
+
       });
   </script>
 </body>
