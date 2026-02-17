@@ -12,25 +12,28 @@ const State = {
   API_URL: "https://nonendurable-russel-cachectical.ngrok-free.dev/complaint",
   FALLBACK_IMG:
     "https://placehold.jp/24/3498db/ffffff/320x200.png?text=No+Image+Available",
-  AUTH_HEADER: "Basic " + btoa(`${localStorage.getItem("email")}:${localStorage.getItem("password")}`),
+  AUTH_HEADER:
+    "Basic " +
+    btoa(
+      `${localStorage.getItem("email")}:${localStorage.getItem("password")}`,
+    ),
 };
 
 // --- 1. DATA SERVICES ---
 const ReportService = {
   async fetchReports() {
-    
     const response = await fetch(
       `${State.API_URL}/getComplaints/${localStorage.getItem("email")}`,
       {
         method: "GET",
         headers: {
-        "ngrok-skip-browser-warning": true,
+          "ngrok-skip-browser-warning": true,
           Authorization: State.AUTH_HEADER,
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
       },
     );
-    
+
     if (!response.ok) throw new Error("Fetch failed");
     return await response.json();
   },
@@ -39,7 +42,6 @@ const ReportService = {
     const response = await fetch(`${State.API_URL}/register`, {
       method: "POST",
       headers: {
-       
         Authorization: State.AUTH_HEADER,
       },
       body: formData,
@@ -64,7 +66,7 @@ const UIRenderer = {
   },
 
   renderReports(reports) {
-    console.log(reports)
+    console.log(reports);
     const grid = document.getElementById("reportsGrid");
     grid.innerHTML = "";
 
@@ -138,6 +140,7 @@ const UIEvents = {
       gpsBtn.onclick = () => {
         document.getElementById("mapModal").style.display = "block";
         MapModule.init();
+        MapModule.detectLocation();
         setTimeout(() => State.map.invalidateSize(), 200);
       };
     }
@@ -163,11 +166,11 @@ const UIEvents = {
   },
 
   async loadData() {
-    console.log("hello")
+    console.log("hello");
     try {
       State.allReports = await ReportService.fetchReports();
       UIRenderer.renderReports(State.allReports);
-      console.log(State.allReports)
+      console.log(State.allReports);
     } catch (err) {
       document.getElementById("reportsGrid").innerHTML = `
                 <div class="empty-state" style="grid-column: 1/-1; text-align:center;">
@@ -322,24 +325,48 @@ const MapModule = {
     );
 
     // Add Geocoder
-    L.Control.geocoder({
-      defaultMarkGeocode: false,
-      placeholder: "Search Location...",
-      collapsed: false,
-    })
-      .on("markgeocode", (e) => {
-        State.map.setView(e.geocode.center, 16);
-        this.updateMarker(
-          e.geocode.center.lat,
-          e.geocode.center.lng,
-          e.geocode.name,
-        );
+    if (typeof L.Control.Geocoder !== "undefined") {
+      const geocoder = L.Control.geocoder({
+        defaultMarkGeocode: false,
+        placeholder: "Search for address...",
+        collapsed: true, // This makes it look like your reference image (icon only)
+        showResultIcons: true,
       })
-      .addTo(State.map);
+        .on("markgeocode", (e) => {
+          const latlng = e.geocode.center;
+          State.map.setView(latlng, 16);
+          this.updateMarker(latlng.lat, latlng.lng, e.geocode.name);
+        })
+        .addTo(State.map);
+    }
 
     State.map.on("click", (e) => this.updateMarker(e.latlng.lat, e.latlng.lng));
   },
+  detectLocation() {
+    const locField = document.getElementById("formLocation");
 
+    if (navigator.geolocation) {
+      // Provide immediate visual feedback in the input
+      locField.placeholder = "Detecting your location...";
+
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const { latitude, longitude } = pos.coords;
+          this.init(); // Ensure map is ready
+          State.map.setView([latitude, longitude], 16);
+          this.updateMarker(latitude, longitude);
+        },
+        (error) => {
+          console.warn("Geolocation error:", error.message);
+          locField.placeholder =
+            "Location access denied. Please pinpoint manually.";
+        },
+        { enableHighAccuracy: true, timeout: 10000 },
+      );
+    } else {
+      locField.placeholder = "Geolocation not supported by browser.";
+    }
+  },
   async updateMarker(lat, lng, addressString = null) {
     const categorySelect = document.getElementById("formCategory");
     const selectedCat = categorySelect ? categorySelect.value : "other";

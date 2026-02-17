@@ -23,7 +23,7 @@ body {
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     position: sticky;
     top: 0;
-    z-index: 1000;
+    z-index: 10;
 }
 
 .logo {
@@ -394,11 +394,11 @@ footer {
 /* Ensure the form card is centered */
 .form-card {
    background: white;
-    width: 100%;
-    max-width: 500px;
-    padding: 30px;
+    width: 90%;
+    max-width: 450px;
+    padding: 25px;
     border-radius: 15px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
 .form-card h2 {
     color: #2c3e50;
@@ -416,21 +416,18 @@ footer {
 }
 
 .upload-box {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
     border: 2px dashed #3498db;
-    border-radius: 12px;
-    background: #f0f7ff;
+    background: #f8fbff;
+    padding: 20px;
+    text-align: center;
+    border-radius: 10px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    display: block;
+    transition: background 0.3s;
 }
 
 .upload-box:hover {
-    background: #e1effe;
-    border-color: #2980b9;
+    background: #ecf5ff;
 }
 
 .upload-box i {
@@ -485,26 +482,25 @@ footer {
 }
 
 .gps-btn {
-    background: #3498db;
+   background: #3498db !important; /* The blue from your image */
     color: white;
     border: none;
-    padding: 0 15px;
+    padding: 12px 15px;
     border-radius: 8px;
     cursor: pointer;
 }
 
 .submit-btn {
-    width: 100%;
-    background: #2ecc71;
+   background: #2ecc71 !important; /* The green from your image */
     color: white;
-    border: none;
+    width: 100%;
     padding: 15px;
-    font-size: 1.1rem;
-    font-weight: bold;
+    border: none;
     border-radius: 8px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-top: 20px;
     cursor: pointer;
-    margin-top: 10px;
-    transition: 0.3s;
 }
 
 .submit-btn:hover {

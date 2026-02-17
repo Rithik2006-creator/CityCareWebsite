@@ -13,6 +13,29 @@
     <link rel="stylesheet" href="report.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
+<style>
+    /* Fix search control appearance in Modal */
+    .leaflet-control-geocoder {
+        background: white;
+        border-radius: 4px;
+        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
+        z-index: 1000;
+    }
+
+    .leaflet-control-geocoder-form input {
+        width: 200px;
+        padding: 5px;
+        border: 1px solid #ccc;
+    }
+
+    /* Ensure suggestions are visible */
+    .leaflet-control-geocoder-expanded .leaflet-control-geocoder-suggestions {
+        display: block;
+        background: white;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+</style>
 
 <body>
 
@@ -69,12 +92,24 @@
                         <span>Tap to upload or take a photo</span>
                         <input id="file-upload" type="file" name="image" accept="image/*">
                     </label>
+                    <button type="button" id="start-camera" class="btn-secondary"
+                        style="margin-top: 10px; width: 100%;">
+                        <i class="fas fa-camera"></i> Use Live Camera
+                    </button>
+
+                    <video id="video" width="320" height="240" autoplay
+                        style="display:none; border-radius: 8px; margin-top:10px;"></video>
+                    <canvas id="canvas" style="display:none;"></canvas>
+                    <button type="button" id="click-photo" style="display:none;" class="btn-primary">Capture
+                        Photo</button>
                     <div id="preview-wrapper" style="display:none;">
                         <img id="imagePreview" src="#" alt="Preview">
                         <p id="file-info"></p>
                     </div>
                 </div>
+                <label>Issue Title</label>
                 <input type="text" id="formTitle" placeholder="Title (e.g., Broken Streetlight)" required>
+                <label>Category</label>
                 <select id="formCategory" required>
                     <option value="">Select a Category</option>
                     <option value="Garbage Management">Garbage Management</option>
@@ -84,15 +119,16 @@
                     <option value="other">Other</option>
                 </select>
                 <div class="location-input">
+                    <label>Location Details</label>
                     <input type="text" id="formLocation" name="location" placeholder="Detecting your location..."
                         required>
-                        <input type="hidden" name="latitude" placeholder="latitude" id="lat">
-                        <input type="hidden" name="longitude" placeholder="longitude" id="lng">
+                    <input type="hidden" name="latitude" placeholder="latitude" id="lat">
+                    <input type="hidden" name="longitude" placeholder="longitude" id="lng">
                     <button type="button" class="gps-btn">
                         <i class="fas fa-crosshairs"></i>
                     </button>
                 </div>
-
+                <label>Description</label>
                 <textarea id="formDesc" placeholder="Describe the issue in detail..." required></textarea>
                 <button type="submit" id="submit-btn">Post Report</button>
             </form>
@@ -103,13 +139,57 @@
             <span class="close" id="closeMapBtn">&times;</span>
             <h3>Search & Select Location</h3>
             <div id="map"></div>
-            <button type="button" class="btn-primary" id="confirmLocationBtn" style="width: 100%;">Confirm Address</button>
+            <button type="button" class="btn-primary" id="confirmLocationBtn" style="width: 100%;">Confirm
+                Address</button>
         </div>
     </div>
     <footer>
         <p>&copy; 2026 CityCare Platform. Empowering communities.</p>
     </footer>
     <script src="report.js"></script>
+    <script>
+        const cameraBtn = document.getElementById('start-camera');
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const clickBtn = document.getElementById('click-photo');
+        const preview = document.getElementById('imagePreview');
+        const wrapper = document.getElementById('preview-wrapper');
+
+        cameraBtn.addEventListener('click', async function () {
+            try {
+                // Specify 'environment' to trigger the back camera
+                let stream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: "environment" },
+                    audio: false
+                });
+
+                video.srcObject = stream;
+                video.style.display = "block";
+                clickBtn.style.display = "block";
+                cameraBtn.style.display = "none";
+            } catch (err) {
+                console.error(err);
+                alert("Camera access denied or not available. Note: This requires HTTPS.");
+            }
+        });
+        clickBtn.addEventListener('click', function () {
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+            let imageData = canvas.toDataURL('image/jpeg');
+
+            // Show in preview
+            preview.src = imageData;
+            preview.style.display = "block";
+            wrapper.style.display = "block";
+
+            // Stop the stream
+            let tracks = video.srcObject.getTracks();
+            tracks.forEach(track => track.stop());
+            video.style.display = "none";
+            clickBtn.style.display = "none";
+            cameraBtn.style.display = "block";
+            cameraBtn.innerText = "Retake Photo";
+        });
+    </script>
 </body>
 
 </html>

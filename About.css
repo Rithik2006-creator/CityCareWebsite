@@ -135,10 +135,10 @@ border: 2px solid rgb(45, 234, 146);
     
     .nav-links {
         position: fixed;
-        width: 100%;
-        height: 100vh;
+        width: 50%;
+        height: 100%;
         background: #2c3e50;
-        top: 80px;
+        top: 78px;
         left: -100%;
         text-align: center;
         transition: all .5s;
