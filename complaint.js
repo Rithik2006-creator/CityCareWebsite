@@ -1,5 +1,5 @@
 // 1. Configuration
-const API_URL = "https://nonendurable-russel-cachectical.ngrok-free.dev/complaint";
+const API_URL = "http://localhost:8080/complaint";
 const authHeader = {
     "Authorization": "Basic " + btoa(`${localStorage.getItem("email")}:${localStorage.getItem("password")}`)
 };

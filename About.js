@@ -11,7 +11,7 @@ closeAll();
 
 // 1. Configuration & Global State
 const CONFIG = {
-  API_URL: "https://nonendurable-russel-cachectical.ngrok-free.dev/complaint",
+  API_URL: "http://localhost:8080/complaint",
   EMAIL: localStorage.getItem("email"),
   AUTH:
     "Basic " +
@@ -198,8 +198,7 @@ document.getElementById("complaintForm").onsubmit = async (e) => {
     const response = await fetch(`${CONFIG.API_URL}/register`, {
       method: "POST",
       headers: {
-        Authorization: CONFIG.AUTH,
-        "ngrok-skip-browser-warning": "true", // Required for ngrok URLs
+       
       },
       body: formData,
     });

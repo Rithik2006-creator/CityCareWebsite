@@ -114,7 +114,7 @@
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
 // 1. Configuration and Global Variables
-const API_URL = "https://nonendurable-russel-cachectical.ngrok-free.dev/complaint";
+const API_URL = "http://localhost:8080/complaint";
 
 let issues = [];
 
@@ -132,7 +132,7 @@ async function loadInitialData() {
     try {
         const response = await fetch(`${API_URL}/getMapData`, {
             headers: {
-                "ngrok-skip-browser-warning": "true",
+               
                 "Authorization": "Basic " + btoa(`${localStorage.getItem("email")}:${localStorage.getItem("password")}`)
             }
         });
