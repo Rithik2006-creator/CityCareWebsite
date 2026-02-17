@@ -187,64 +187,7 @@
         </div>
     </div>
     <script src="About.js"></script>
-      <script>
-        const cameraBtn = document.getElementById('start-camera');
-const video = document.getElementById('video');
-const canvas = document.getElementById('canvas');
-const clickBtn = document.getElementById('click-photo');
-const preview = document.getElementById('imagePreview');
-const wrapper = document.getElementById('preview-wrapper');
-let capturedBlob = null; // Store the captured file globally
-
-cameraBtn.addEventListener('click', async function() {
-    try {
-        const stream = await navigator.mediaDevices.getUserMedia({ 
-            video: { facingMode: "environment" }, // Prioritize rear camera on mobile
-            audio: false 
-        });
-        video.srcObject = stream;
-        video.style.display = "block";
-        clickBtn.style.display = "block";
-        cameraBtn.style.display = "none";
-        wrapper.style.display = "none"; // Hide old preview while taking new photo
-    } catch (err) {
-        console.error("Camera Error:", err);
-        alert("Camera access denied. Please ensure you are using HTTPS or localhost.");
-    }
-});
-
-clickBtn.addEventListener('click', function() {
-    // 1. Set canvas size to match the video stream exactly
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    
-    // 2. Draw the frame to canvas
-    const context = canvas.getContext('2d');
-    context.drawImage(video, 0, 0, canvas.width, canvas.height);
-    
-    // 3. Convert to Blob (File format) for easier submission
-    canvas.toBlob((blob) => {
-        capturedBlob = new File([blob], "captured_image.jpg", { type: "image/jpeg" });
-        
-        // 4. Update Preview
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            preview.src = reader.result;
-            wrapper.style.display = "block";
-            document.getElementById('file-info').innerText = "Captured from Camera";
-        };
-        reader.readAsDataURL(capturedBlob);
-    }, 'image/jpeg', 0.9);
-    
-    // 5. Cleanup: Stop camera stream
-    const tracks = video.srcObject.getTracks();
-    tracks.forEach(track => track.stop());
-    video.style.display = "none";
-    clickBtn.style.display = "none";
-    cameraBtn.style.display = "block";
-    cameraBtn.innerHTML = '<i class="fas fa-redo"></i> Retake Photo';
-});
-    </script>
+      
 </body>
 
 </html>

@@ -9,6 +9,8 @@ const State = {
   map: null,
   marker: null,
   selectedAddress: null,
+  cameraBlob: null,
+  stream: null,
   API_URL: "https://nonendurable-russel-cachectical.ngrok-free.dev/complaint",
   FALLBACK_IMG:
     "https://placehold.jp/24/3498db/ffffff/320x200.png?text=No+Image+Available",
@@ -105,12 +107,14 @@ const UIRenderer = {
   },
 
   processImageData(report) {
-    if (report.imageData) {
-      return report.imageData.startsWith("data:image")
-        ? report.imageData
-        : "data:image/png;base64," + report.imageData;
-    }
-    return report.img || State.FALLBACK_IMG;
+    const data = report.imageData || report.img;
+    if (!data) return State.FALLBACK_IMG;
+
+    // Check if it's already a full URL or a Base64 string with header
+    if (data.startsWith("http") || data.startsWith("data:image")) return data;
+
+    // Fallback: Assume it's raw Base64
+    return `data:image/jpeg;base64,${data}`;
   },
 };
 
@@ -184,14 +188,19 @@ const UIEvents = {
   bindSearch() {
     const searchInput = document.querySelector(".search-box input");
     if (!searchInput) return;
+
+    let debounceTimer;
     searchInput.addEventListener("input", (e) => {
-      const term = e.target.value.toLowerCase();
-      const filtered = State.allReports.filter(
-        (r) =>
-          r.title?.toLowerCase().includes(term) ||
-          r.location?.toLowerCase().includes(term),
-      );
-      UIRenderer.renderReports(filtered);
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        const term = e.target.value.toLowerCase();
+        const filtered = State.allReports.filter(
+          (r) =>
+            r.title?.toLowerCase().includes(term) ||
+            r.location?.toLowerCase().includes(term),
+        );
+        UIRenderer.renderReports(filtered);
+      }, 300); 
     });
   },
 
@@ -214,28 +223,6 @@ const UIEvents = {
     });
   },
 
-  bindImagePreview() {
-    const fileUpload = document.getElementById("file-upload");
-    if (fileUpload) {
-      fileUpload.addEventListener("change", function (e) {
-        const file = e.target.files[0];
-        const preview = document.getElementById("imagePreview");
-        const info = document.getElementById("file-info");
-        const wrapper = document.getElementById("preview-wrapper");
-
-        if (file) {
-          info.innerHTML = `Selected: ${file.name}`;
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            preview.src = e.target.result;
-            preview.style.display = "block";
-            if (wrapper) wrapper.style.display = "block";
-          };
-          reader.readAsDataURL(file);
-        }
-      });
-    }
-  },
 
   openViewModal(id) {
     const item = State.allReports.find((r) => r.id == id);
@@ -269,8 +256,9 @@ const UIEvents = {
       const originalText = submitBtn.innerText;
       const latitude = document.querySelector("#lat").value;
       const longitude = document.getElementById("lng").value;
-      if (!latitude && !longitude) {
-        alert("Please confirm the Location..... ");
+      if (!latitude || !longitude) {
+        alert("Please use the GPS tool to pinpoint the location on the map.");
+        return;
       }
       submitBtn.disabled = true;
       submitBtn.innerText = "Posting...";
@@ -294,6 +282,8 @@ const UIEvents = {
       const fileInput = document.getElementById("file-upload");
       if (fileInput.files[0]) {
         formData.append("image", fileInput.files[0]);
+      } else if (State.cameraBlob) {
+        formData.append("image", State.cameraBlob, "capture.jpg");
       }
       try {
         await ReportService.submitReport(formData);
@@ -423,9 +413,101 @@ document.addEventListener("DOMContentLoaded", () => UIEvents.init());
 window.closeModals = () => {
   document.getElementById("viewModal").style.display = "none";
   document.getElementById("formModal").style.display = "none";
+  stopCamera();
 };
 
 // Close on outside click
 window.onclick = (event) => {
   if (event.target.classList.contains("modal")) closeModals();
+};
+
+const fileInput = document.getElementById("file-upload");
+const cameraBtn = document.getElementById("start-camera");
+const video = document.getElementById("video");
+const canvas = document.getElementById("canvas");
+const clickBtn = document.getElementById("click-photo");
+const previewImg = document.getElementById("imagePreview");
+const previewWrapper = document.getElementById("preview-wrapper");
+const fileInfo = document.getElementById("file-info");
+
+function stopCamera() {
+  if (State.stream) {
+    State.stream.getTracks().forEach((track) => track.stop());
+    State.stream = null;
+  }
+  video.srcObject=null;
+  video.style.display = "none";
+  clickBtn.style.display = "none";
+  cameraBtn.style.display = "block";
+  cameraBtn.innerText = "Use Live Camera";
+
+const submitBtn = document.getElementById("submit-btn");
+  if (submitBtn) {
+    submitBtn.disabled = false;
+    submitBtn.innerText = "Submit Report";
+  }
+}
+// Helper to show preview
+function displayPreview(source, text) {
+    // 1. Clean up old memory to prevent leaks
+    if (previewImg.src.startsWith("blob:")) {
+        URL.revokeObjectURL(previewImg.src);
+    }
+
+    // 2. Create a fast temporary URL
+    const url = (source instanceof Blob || source instanceof File)
+        ? URL.createObjectURL(source)
+        : source;
+
+    previewImg.src = url;
+    previewWrapper.style.display = "block";
+    fileInfo.innerText = text;
+}
+
+// 1. Handle Gallery Upload
+fileInput.onchange = function (e) {
+  const file = e.target.files[0];
+  if (file) {
+    State.cameraBlob = null; // Clear previous camera capture
+    stopCamera(); // Shut down camera if it was open
+    displayPreview(file, "Selected: " + file.name);
+  }
+};
+cameraBtn.addEventListener("click", async function () {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: "environment" },
+      audio: false,
+    });
+    State.stream = stream;
+    video.srcObject = stream;
+
+    video.style.display = "block";
+    clickBtn.style.display = "block";
+    cameraBtn.style.display = "none";
+    previewWrapper.style.display = "none";
+  } catch (err) {
+    console.error("Camera Error:", err);
+    alert(
+      "Camera access denied. Please ensure you are using HTTPS or localhost.",
+    );
+  }
+});
+
+clickBtn.onclick = function () {
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  canvas.getContext("2d").drawImage(video, 0, 0);
+
+  canvas.toBlob(
+    (blob) => {
+      State.cameraBlob = blob; // Store camera image
+      fileInput.value = ""; // Clear file upload input
+      displayPreview(blob, "Captured from Camera");
+    },
+    "image/jpeg",
+    0.8,
+  );
+
+  stopCamera(); // Shutdown camera after snapping
 };

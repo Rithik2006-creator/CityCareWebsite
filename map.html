@@ -194,7 +194,9 @@
             marker: null,
             selectedAddress: "",
             currentLat: null,
-            currentLng: null
+            currentLng: null,
+            cameraBlob: null,
+            stream: null // Keep track of the camera stream to stop it
         };
 
         // 2. Map Module Logic
@@ -276,6 +278,7 @@
             document.querySelector('.submit-container').style.display = 'none';
             document.getElementById('mapModal').style.display = 'none';
             document.body.style.overflow = "auto";
+            stopCamera();
         }
         document.getElementById('closeForm').onclick = closeAll;
         document.querySelector('.close-modal').onclick = closeAll;
@@ -303,25 +306,7 @@
         };
 
 
-        // Image Preview Handler
-        document.getElementById('file-upload').onchange = function (e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    // Update the preview image
-                    document.getElementById('imagePreview').src = event.target.result;
 
-                    // Show the preview card and set the text
-                    document.getElementById('preview-wrapper').style.display = 'block';
-                    document.getElementById('file-info').innerText = "Selected: " + file.name;
-
-                    // Optional: Hide the upload box to save space like some apps do
-                    // document.getElementById('dropzone').style.display = 'none'; 
-                };
-                reader.readAsDataURL(file);
-            }
-        };
 
         // 4. Form Submission Logic
         document.getElementById('complaintForm').onsubmit = async (e) => {
@@ -331,7 +316,7 @@
             const originalText = btn.innerText;
 
             // Check for Location
-            if (!document.getElementById('lat').value) {
+            if (!State.currentLat || !State.currentLng) {
                 alert("Please use the GPS tool to select a location.");
                 return;
             }
@@ -354,7 +339,11 @@
             formData.append("accept", new Blob([JSON.stringify(complaintData)], { type: "application/json" }));
 
             const fileInput = document.getElementById('file-upload');
-            if (fileInput.files[0]) {
+            if (State.cameraBlob) {
+                formData.append("image", State.cameraBlob, "camera_capture.jpg");
+            }
+
+            else if (fileInput.files[0]) {
                 formData.append("image", fileInput.files[0]);
             }
 
@@ -383,64 +372,100 @@
             }
         };
 
-    </script>
-      <script>
+
+        const fileInput = document.getElementById('file-upload');
         const cameraBtn = document.getElementById('start-camera');
-const video = document.getElementById('video');
-const canvas = document.getElementById('canvas');
-const clickBtn = document.getElementById('click-photo');
-const preview = document.getElementById('imagePreview');
-const wrapper = document.getElementById('preview-wrapper');
-let capturedBlob = null; // Store the captured file globally
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const clickBtn = document.getElementById('click-photo');
+        const previewImg = document.getElementById('imagePreview');
+        const previewWrapper = document.getElementById('preview-wrapper');
+        const fileInfo = document.getElementById('file-info');
 
-cameraBtn.addEventListener('click', async function() {
-    try {
-        const stream = await navigator.mediaDevices.getUserMedia({ 
-            video: { facingMode: "environment" }, // Prioritize rear camera on mobile
-            audio: false 
-        });
-        video.srcObject = stream;
-        video.style.display = "block";
-        clickBtn.style.display = "block";
-        cameraBtn.style.display = "none";
-        wrapper.style.display = "none"; // Hide old preview while taking new photo
-    } catch (err) {
-        console.error("Camera Error:", err);
-        alert("Camera access denied. Please ensure you are using HTTPS or localhost.");
-    }
-});
+        function stopCamera() {
+            if (State.stream) {
+                State.stream.getTracks().forEach(track => track.stop());
+                State.stream = null;
+            }
+            video.srcObject = null;
+            video.style.display = "none";
+            clickBtn.style.display = "none";
+            cameraBtn.style.display = "block";
+            cameraBtn.innerText = "Use Live Camera";
+            const submitBtn = document.querySelector(".submit-btn");
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Submit Report";
+            }
+        }
+        // Helper to show preview
+        function displayPreview(source, text) {
+            // Revoke old URL to save memory
+            if (previewImg.src.startsWith('blob:')) {
+                URL.revokeObjectURL(previewImg.src);
+            }
 
-clickBtn.addEventListener('click', function() {
-    // 1. Set canvas size to match the video stream exactly
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    
-    // 2. Draw the frame to canvas
-    const context = canvas.getContext('2d');
-    context.drawImage(video, 0, 0, canvas.width, canvas.height);
-    
-    // 3. Convert to Blob (File format) for easier submission
-    canvas.toBlob((blob) => {
-        capturedBlob = new File([blob], "captured_image.jpg", { type: "image/jpeg" });
-        
-        // 4. Update Preview
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            preview.src = reader.result;
-            wrapper.style.display = "block";
-            document.getElementById('file-info').innerText = "Captured from Camera";
+            const url = (source instanceof Blob || source instanceof File)
+                ? URL.createObjectURL(source)
+                : source;
+
+            previewImg.src = url;
+            previewWrapper.style.display = 'block';
+            fileInfo.innerText = text;
+        }
+
+        // 1. Handle Gallery Upload
+        fileInput.onchange = function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                State.cameraBlob = null;
+                stopCamera();
+                displayPreview(file, "Selected from gallery: " + file.name);
+            }
         };
-        reader.readAsDataURL(capturedBlob);
-    }, 'image/jpeg', 0.9);
-    
-    // 5. Cleanup: Stop camera stream
-    const tracks = video.srcObject.getTracks();
-    tracks.forEach(track => track.stop());
-    video.style.display = "none";
-    clickBtn.style.display = "none";
-    cameraBtn.style.display = "block";
-    cameraBtn.innerHTML = '<i class="fas fa-redo"></i> Retake Photo';
-});
+        cameraBtn.addEventListener('click', async function () {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: "environment" },
+                    audio: false
+                });
+                State.stream = stream;
+                video.srcObject = stream;
+
+                video.style.display = "block";
+                clickBtn.style.display = "block";
+                cameraBtn.style.display = "none";
+                previewWrapper.style.display = "none";
+            } catch (err) {
+                console.error("Camera Error:", err);
+                alert("Camera access denied. Please ensure you are using HTTPS or localhost.");
+            }
+        });
+
+
+
+        clickBtn.onclick = function () {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0);
+
+            canvas.toBlob((blob) => {
+                State.cameraBlob = blob; // Store camera image
+                fileInput.value = "";    // Clear file upload input
+                displayPreview(blob, "Captured from Camera");
+            }, 'image/jpeg', 0.8);
+
+            stopCamera(); // Shutdown camera after snapping
+        };
+        window.onclick = function (event) {
+            const submitContainer = document.querySelector('.submit-container');
+            const mapModal = document.getElementById('mapModal');
+
+            // If user clicks the dark overlay of the form or map
+            if (event.target === submitContainer || event.target === mapModal) {
+                closeAll();
+            }
+        };
     </script>
 </body>
 

@@ -147,49 +147,7 @@
         <p>&copy; 2026 CityCare Platform. Empowering communities.</p>
     </footer>
     <script src="report.js"></script>
-    <script>
-        const cameraBtn = document.getElementById('start-camera');
-        const video = document.getElementById('video');
-        const canvas = document.getElementById('canvas');
-        const clickBtn = document.getElementById('click-photo');
-        const preview = document.getElementById('imagePreview');
-        const wrapper = document.getElementById('preview-wrapper');
-
-        cameraBtn.addEventListener('click', async function () {
-            try {
-                // Specify 'environment' to trigger the back camera
-                let stream = await navigator.mediaDevices.getUserMedia({
-                    video: { facingMode: "environment" },
-                    audio: false
-                });
-
-                video.srcObject = stream;
-                video.style.display = "block";
-                clickBtn.style.display = "block";
-                cameraBtn.style.display = "none";
-            } catch (err) {
-                console.error(err);
-                alert("Camera access denied or not available. Note: This requires HTTPS.");
-            }
-        });
-        clickBtn.addEventListener('click', function () {
-            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-            let imageData = canvas.toDataURL('image/jpeg');
-
-            // Show in preview
-            preview.src = imageData;
-            preview.style.display = "block";
-            wrapper.style.display = "block";
-
-            // Stop the stream
-            let tracks = video.srcObject.getTracks();
-            tracks.forEach(track => track.stop());
-            video.style.display = "none";
-            clickBtn.style.display = "none";
-            cameraBtn.style.display = "block";
-            cameraBtn.innerText = "Retake Photo";
-        });
-    </script>
+    
 </body>
 
 </html>
