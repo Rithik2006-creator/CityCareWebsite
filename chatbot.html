@@ -200,9 +200,9 @@
     <div class="logo">City<span>Care</span></div>
     <div class="menu-toggle" onclick="toggleMenu()">☰</div>
     <ul class="nav-links" id="navLinks">
-      <li><a href="https://rithik2006-creator.github.io/CityCareWebsite/home.html">Home</a></li>
-      <li><a href="https://rithik2006-creator.github.io/CityCareWebsite/reports.html">Report Waste</a></li>
-      <li><a href="https://rithik2006-creator.github.io/CityCareWebsite/chatbot.html">Chatbot</a></li>
+      <li><a href="home.html">Home</a></li>
+      <li><a href="reports.html">Report Waste</a></li>
+      <li><a href="chatbot.html">Chatbot</a></li>
     
     </ul>
   </nav>
@@ -261,7 +261,7 @@ try {
   }
 
   const response = await fetch(
-    `https://nonendurable-russel-cachectical.ngrok-free.dev/api/${encodeURIComponent(message)}`,
+    `http://localhost:8080/api/${encodeURIComponent(message)}`,
     {
       headers: {
         "ngrok-skip-browser-warning": "true",

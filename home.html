@@ -334,7 +334,7 @@
 
         // 1. Configuration & Global State
         const CONFIG = {
-            API_URL: "https://nonendurable-russel-cachectical.ngrok-free.dev/complaint",
+            API_URL: "http://localhost:8080/complaint",
             EMAIL: localStorage.getItem("email"),
             AUTH: "Basic " + btoa(`${localStorage.getItem("email")}:${localStorage.getItem("password")}`)
         };
@@ -514,7 +514,7 @@
                     method: "POST",
                     headers: {
                         "Authorization": CONFIG.AUTH,
-                        "ngrok-skip-browser-warning": "true" // Required for ngrok URLs
+                        
                     },
                     body: formData
                 });
@@ -535,7 +535,7 @@
         };
 
         function toggleChat() {
-            const cburl = "https://rithik2006-creator.github.io/CityCareWebsite/chatbot.html";
+            const cburl = "http://127.0.0.1:5501/chatbot.html/chatbot.html";
             window.open(cburl, "_blank");
             const badge = document.querySelector('.chat-badge')
             if (badge) {
@@ -587,13 +587,13 @@
             if (confirm("Are you sure you want to logout?")) {
                 localStorage.clear();
 
-                window.location.href = "https://rithik2006-creator.github.io/CityCareWebsite";
+                window.location.href = "http://127.0.0.1:5501/";
             }
         }
         function getCount() {
             const stat_div = document.getElementById("countStat");
 
-            fetch("https://nonendurable-russel-cachectical.ngrok-free.dev/complaint/getCount", {
+            fetch("http://localhost:8080/complaint/getCount", {
                 headers: {
                     "ngrok-skip-browser-warning": true
                 }
