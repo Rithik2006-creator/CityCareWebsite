@@ -198,7 +198,7 @@
 
   <script>
     const API_BASE_URL =
-      "https://nonendurable-russel-cachectical.ngrok-free.dev";
+      "http://localhost:8080";
 
     // ---------------- TAB SWITCH ----------------
     function switchTab(tab) {
@@ -241,7 +241,7 @@
 
         try {
           const response = await fetch(
-            "https://nonendurable-russel-cachectical.ngrok-free.dev/login",
+            "http://localhost:8080/login",
             {
               method: "POST",
               headers: {
