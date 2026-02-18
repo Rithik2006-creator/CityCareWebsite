@@ -125,7 +125,6 @@ const UIEvents = {
     this.bindFilters();
     this.bindForm();
     this.bindSearch();
-    this.bindImagePreview();
     this.loadData();
   },
 

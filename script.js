@@ -1,4 +1,4 @@
-closeAll();
+
 
 // 1. Configuration & Global State
 const CONFIG = {
@@ -400,3 +400,4 @@ window.onclick = function (event) {
     closeAll();
   }
 };
+closeAll();
