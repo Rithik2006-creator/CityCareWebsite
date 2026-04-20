@@ -19,7 +19,7 @@
 * 🎓 I am currently a **Computer Science student**
 * 📊 Aspiring **Data Scientist**
 * 💻 Sharing all my projects here on GitHub
-* 🚀 Focused on learning by building real-world applications
+* 🚀 Focused on building real-world applications
 * 📚 Continuously improving my skills
 
 ---
@@ -61,6 +61,11 @@
 ---
 
 <!-- FOOTER -->
+
+<p align="center">
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:1f4037,50:99f2c8,100:1f4037&height=120&section=footer"/>
+</p>
+
 
 <p align="center">
   <img src="https://capsule-render.vercel.app/api?type=waving&color=0:1f4037,50:99f2c8,100:1f4037&height=120&section=footer"/>
