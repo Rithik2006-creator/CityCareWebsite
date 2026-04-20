@@ -67,7 +67,5 @@
 </p>
 
 
-<p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:1f4037,50:99f2c8,100:1f4037&height=120&section=footer"/>
-</p>
+
 
